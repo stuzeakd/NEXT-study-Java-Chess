@@ -4,15 +4,17 @@ import java.util.EnumSet;
 import java.util.Iterator;
 
 public class King extends Piece {
-
+	private boolean _notYetMoved;
 	public King(char file, char rank, EPlayerColor color) {
 		// TODO Auto-generated constructor stub
 		super(file, rank, color);
 		_attackDirs = EnumSet.of(EDirection.UP, EDirection.DOWN, EDirection.LEFT, EDirection.RIGHT
 				,EDirection.UPLEFT, EDirection.UPRIGHT, EDirection.DOWNLEFT, EDirection.DOWNRIGHT);
+		_notYetMoved = true;
 	}
 	public EPieceType GetType(){ return EPieceType.KING; }
-	
+	public boolean IsNotYetMoved(){ return _notYetMoved; }
+
 	@Override
 	public void Update(ChessBoard board) {
 		// TODO Auto-generated method stub
@@ -52,5 +54,17 @@ public class King extends Piece {
 			if(checkCoord != null && testBoard.GetSquare(checkCoord).GetColor() != _color)
 				_canAttackTo.add(checkCoord);
 		}
+	} 
+	public void AddKingSideCastling() {
+		// TODO Auto-generated method stub
+		_canMoveTo.add(new Coord('g', _pos.GetCharRank()));
+	}	
+	public void AddQueenSideCastling() {
+		// TODO Auto-generated method stub
+		_canMoveTo.add(new Coord('c', _pos.GetCharRank()));
+	}
+	public void firstMove() {
+		// TODO Auto-generated method stub
+		if(_notYetMoved) _notYetMoved = false;
 	}
 }

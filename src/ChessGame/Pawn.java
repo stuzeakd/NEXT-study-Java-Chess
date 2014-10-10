@@ -5,22 +5,26 @@ import java.util.EnumSet;
 import java.util.Iterator;
 
 public class Pawn extends Piece {
-	private EDirection dir;
+	private EDirection _dir;
+	private boolean _notYetMoved;
 	public Pawn(char file, char rank, EPlayerColor color) {
 		super(file, rank, color);
 		_canAttackTo = new ArrayList<Coord>();
 		
 		if(color == EPlayerColor.BLACK){
-			dir = EDirection.DOWN;
+			_dir = EDirection.DOWN;
 			_attackDirs = EnumSet.of(EDirection.DOWNLEFT, EDirection.DOWNRIGHT);
 		}
 		else if(color == EPlayerColor.WHITE){
-			dir = EDirection.UP;
+			_dir = EDirection.UP;
 			_attackDirs = EnumSet.of(EDirection.UPLEFT, EDirection.UPRIGHT);
 		}
 		// else : color none exception;
+		_notYetMoved = true;
 	}
+	public boolean IsNotYetMoved(){ return _notYetMoved; }
 	public EPieceType GetType(){ return EPieceType.PAWN; }
+
 	@Override
 	public void Update(ChessBoard board) {
 		// TODO Auto-generated method stub
@@ -32,10 +36,13 @@ public class Pawn extends Piece {
 		if(board.GetSquare(_pos).GetPiece() != GetType() 
 				|| board.GetSquare(_pos).GetColor() != _color) return;
 
-		
-		Coord checkCoord = Utility.NewCoordOneMoveTo_From_(dir, _pos);
+		Coord checkCoord = Utility.NewCoordOneMoveTo_From_(_dir, _pos);
 		if(checkCoord != null && board.GetSquare(checkCoord).GetColor() == EPlayerColor.NONE)
 			_canMoveTo.add(checkCoord);
+		if(_notYetMoved){
+			checkCoord = Utility.NewCoordOneMoveTo_From_(_dir, checkCoord);
+			if(board.GetSquare(checkCoord).GetColor() == EPlayerColor.NONE) _canMoveTo.add(checkCoord);
+		}
 		
 		Iterator<EDirection> dirIter = _attackDirs.iterator();
 		while(dirIter.hasNext())
@@ -75,5 +82,9 @@ public class Pawn extends Piece {
 			}
 		}
 
+	}
+	public void firstMove() {
+		// TODO Auto-generated method stub
+		_notYetMoved = false;
 	}
 }

@@ -4,13 +4,16 @@ import java.util.EnumSet;
 import java.util.Iterator;
 
 public class Rook extends Piece {
-
+	private boolean _notYetMoved;
 	public Rook(char file, char rank, EPlayerColor color) {
 		super(file, rank, color);
 		_attackDirs = EnumSet.of(EDirection.UP, EDirection.DOWN, EDirection.LEFT, EDirection.RIGHT);
+		_notYetMoved = true;
 	}
 	@Override
 	public EPieceType GetType() { return EPieceType.ROOK; }
+	public boolean IsNotYetMoved(){ return _notYetMoved; }
+
 	@Override
 	public void Update(ChessBoard board) {
 		// TODO Auto-generated method stub
@@ -71,6 +74,10 @@ public class Rook extends Piece {
 			}
 
 		}
+	}
+	public void firstMove() {
+		// TODO Auto-generated method stub
+		if(_notYetMoved) _notYetMoved = false;
 	}
 
 }
